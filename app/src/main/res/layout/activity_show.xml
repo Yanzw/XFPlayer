@@ -5,7 +5,7 @@
     android:id="@+id/rlShow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="uk.me.feixie.xfplayer.ShowActivity">
+    tools:context=".activity.ShowActivity">
 
     <io.vov.vitamio.widget.VideoView
         android:id="@+id/vvShow"

@@ -3,6 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
-    <color name="black_overlay">#66000000</color>
+    <color name="jikelv">#77db93</color>
+    <color name="lpink">#f9b8c5</color>
+    <color name="lblue">#aacded</color>
+    <color name="tfblue">#5fcdcc</color>
+    <color name="tfblueDark">#0fcdcc</color>
+    <color name="lineSeperate">#66000000</color>
 </resources>

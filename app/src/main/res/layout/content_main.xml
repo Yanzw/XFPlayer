@@ -1,16 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="uk.me.feixie.xfplayer.MainActivity"
+    tools:context=".activity.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Vitamio Demo"/>
-</RelativeLayout>
+    <FrameLayout
+        android:id="@+id/rlMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Vitamio Demo"/>
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lineSeperate"
+        />
+
+    <RadioGroup
+        android:id="@+id/rgMain"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbLocal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:button="@null"
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:drawableTop="@drawable/ic_account_balance_black_24dp"
+            android:text="@string/local"
+            android:textColor="@drawable/radio_selector"/>
+
+        <RadioButton
+            android:id="@+id/rbServer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/server"
+            android:textColor="@drawable/radio_selector"
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:drawableTop="@drawable/ic_language_black_24dp"
+            android:button="@null"/>
+
+        <RadioButton
+            android:id="@+id/rbLive"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/live"
+            android:textColor="@drawable/radio_selector"
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:drawableTop="@drawable/ic_tv_black_24dp"
+            android:button="@null"/>
+
+        <RadioButton
+            android:id="@+id/rbMe"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/me"
+            android:textColor="@drawable/radio_selector"
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:drawableTop="@drawable/ic_person_outline_black_24dp"
+            android:button="@null"/>
+
+    </RadioGroup>
+
+</LinearLayout>

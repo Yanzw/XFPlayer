@@ -1,4 +1,4 @@
-package uk.me.feixie.xfplayer;
+package uk.me.feixie.xfplayer.activity;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.MediaController;
 import io.vov.vitamio.widget.VideoView;
+import uk.me.feixie.xfplayer.R;
 
 public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
 

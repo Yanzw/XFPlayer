@@ -1,82 +1,123 @@
 package uk.me.feixie.xfplayer.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.SparseArrayCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import org.xutils.x;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import uk.me.feixie.xfplayer.BuildConfig;
 import uk.me.feixie.xfplayer.R;
 import uk.me.feixie.xfplayer.fragment.LiveFragment;
-import uk.me.feixie.xfplayer.fragment.LocalFragment;
+import uk.me.feixie.xfplayer.fragment.LocalFragmentDirectories;
+import uk.me.feixie.xfplayer.fragment.LocalFragmentVideo;
 import uk.me.feixie.xfplayer.fragment.MeFragment;
 import uk.me.feixie.xfplayer.fragment.ServerFragment;
+import uk.me.feixie.xfplayer.utils.GloableConstants;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private RadioButton rbLocal;
-    private RadioButton rbServer;
-    private RadioButton rbLive;
-    private RadioButton rbMe;
     private RadioGroup rgMain;
     private FragmentManager mFragmentManager;
 
-
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private DrawerLayout dlLocal;
+    private ListView lvLeftMenu;
+    private List<uk.me.feixie.xfplayer.model.MenuItem> menuList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        x.Ext.init(getApplication());
-//        x.Ext.setDebug(BuildConfig.DEBUG);
+        x.Ext.init(getApplication());
+        x.Ext.setDebug(BuildConfig.DEBUG);
 //        x.view().inject(this);
         setContentView(R.layout.activity_main);
-        initViews();
         initData();
+        initViews();
         initListeners();
     }
 
     private void initViews() {
 
         rbLocal = (RadioButton) findViewById(R.id.rbLocal);
-        rbServer = (RadioButton) findViewById(R.id.rbServer);
-        rbLive = (RadioButton) findViewById(R.id.rbLive);
-        rbMe = (RadioButton) findViewById(R.id.rbMe);
         rgMain = (RadioGroup) findViewById(R.id.rgMain);
+
+        dlLocal = (DrawerLayout)findViewById(R.id.dlLocal);
+        lvLeftMenu = (ListView)findViewById(R.id.lvLeftMenu);
+
+        MyListAdapter listAdapter = new MyListAdapter();
+        lvLeftMenu.setAdapter(listAdapter);
+        lvLeftMenu.setItemChecked(0, true);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Local");
         if (getSupportActionBar()!=null){
+            getSupportActionBar().setTitle("Local");
+        }
+
+        LocalFragmentVideo localFragment =  new LocalFragmentVideo();
+        mFragmentManager = getSupportFragmentManager();
+        mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment, GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
+
+        rbLocal.setChecked(true);
+        if (rbLocal.isChecked() && getSupportActionBar()!=null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
-        LocalFragment localFragment =  new LocalFragment();
-        mFragmentManager = getSupportFragmentManager();
-        mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment,"localFragment").commit();
 
-        rbLocal.setChecked(true);
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, dlLocal, toolbar, R.string.drawer_open, R.string.drawer_close);
+        // Set the drawer toggle as the DrawerListener
+        dlLocal.addDrawerListener(mActionBarDrawerToggle);
+        mActionBarDrawerToggle.syncState();
     }
 
     private void initData() {
 
+        menuList = new ArrayList<>();
+        uk.me.feixie.xfplayer.model.MenuItem video = new uk.me.feixie.xfplayer.model.MenuItem(R.drawable.ic_movie_black_24dp, "Video");
+        menuList.add(video);
+        uk.me.feixie.xfplayer.model.MenuItem audio = new uk.me.feixie.xfplayer.model.MenuItem(R.drawable.ic_library_music_black_24dp, "Audio");
+        menuList.add(audio);
+        uk.me.feixie.xfplayer.model.MenuItem directories = new uk.me.feixie.xfplayer.model.MenuItem(R.drawable.ic_folder_black_24dp, "Directories");
+        menuList.add(directories);
+
     }
 
     private void initListeners() {
+
         rgMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rbLocal:
-                        LocalFragment localFragment = (LocalFragment) mFragmentManager.findFragmentByTag("localFragment");
+                        LocalFragmentVideo localFragment = (LocalFragmentVideo) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_VIDEO);
                         if (localFragment!=null) {
                             mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment).commit();
                         } else {
-                            localFragment = new LocalFragment();
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment,"localFragment").commit();
+                            localFragment = new LocalFragmentVideo();
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment,GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
                         }
                         break;
                     case R.id.rbServer:
@@ -109,6 +150,36 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        lvLeftMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Fragment localFragmentVideo = mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_VIDEO);
+                Fragment localFragmentDirectories = mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_DIRECTORIES);
+                switch (position) {
+                    case 0:
+                        if (localFragmentVideo!=null) {
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentVideo).commit();
+                        } else {
+                            localFragmentVideo = new LocalFragmentVideo();
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentVideo,GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
+                        }
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        if (localFragmentDirectories!=null) {
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentDirectories).commit();
+                        } else {
+                            localFragmentDirectories = new LocalFragmentDirectories();
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentDirectories,GloableConstants.FRAGMENT_LOCAL_DIRECTORIES).commit();
+                        }
+                        break;
+                }
+                dlLocal.closeDrawers();
+            }
+        });
     }
 
     @Override
@@ -131,5 +202,42 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /*------------------Left menu list adapter------------------*/
+    public class MyListAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return menuList.size();
+        }
+
+        @Override
+        public uk.me.feixie.xfplayer.model.MenuItem getItem(int position) {
+            return menuList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            uk.me.feixie.xfplayer.model.MenuItem menuItem = menuList.get(position);
+
+            if (convertView == null) {
+                convertView = View.inflate(MainActivity.this, R.layout.item_list_menu, null);
+            }
+
+            ImageView ivMenuItem = (ImageView) convertView.findViewById(R.id.ivMenuItem);
+            ivMenuItem.setImageResource(menuItem.getImageId());
+            TextView tvMenuItem = (TextView) convertView.findViewById(R.id.tvMenuItem);
+            tvMenuItem.setText(menuItem.getName());
+
+            return convertView;
+        }
     }
 }

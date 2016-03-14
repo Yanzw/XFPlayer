@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
     private VideoView vvShow;
     private RelativeLayout rlShow;
     private static final double SCALE_RATIO = 2.5;
+    private String mVideo_path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,8 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
         //check vitamio ready
         if (!io.vov.vitamio.LibsChecker.checkVitamioLibs(this))
             return;
+
+        mVideo_path = getIntent().getStringExtra("video_path");
 
         initViews();
     }
@@ -52,14 +56,20 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
         }
 
 //        vvShow.setVideoPath("http://192.168.0.2/tycq.mkv");
-        vvShow.setVideoPath("http://192.168.0.2/tjxs.rmvb");
+//        vvShow.setVideoPath("http://192.168.0.2/tjxs.rmvb");
 //        vvShow.setVideoPath("http://zv.3gv.ifeng.com/live/zixun800k.m3u8");
 //        MediaController controller = new MediaController(this);
-        vvShow.setMediaController(new MediaController(this));
-        vvShow.setOnCompletionListener(this);
-        vvShow.setOnErrorListener(this);
-        vvShow.setOnPreparedListener(this);
-        vvShow.start();
+        if (!TextUtils.isEmpty(mVideo_path)) {
+            vvShow.setVideoPath(mVideo_path);
+            vvShow.setMediaController(new MediaController(this));
+            vvShow.setOnCompletionListener(this);
+            vvShow.setOnErrorListener(this);
+            vvShow.setOnPreparedListener(this);
+            vvShow.start();
+        } else {
+            Toast.makeText(this,"No video found!",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override

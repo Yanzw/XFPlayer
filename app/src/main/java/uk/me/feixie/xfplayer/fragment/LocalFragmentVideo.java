@@ -3,6 +3,7 @@ package uk.me.feixie.xfplayer.fragment;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -31,9 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.me.feixie.xfplayer.R;
+import uk.me.feixie.xfplayer.activity.OriginalShowActivity;
 import uk.me.feixie.xfplayer.activity.ShowActivity;
 import uk.me.feixie.xfplayer.model.MenuItem;
 import uk.me.feixie.xfplayer.model.Video;
+import uk.me.feixie.xfplayer.utils.FileUtil;
 import uk.me.feixie.xfplayer.utils.GloableConstants;
 import uk.me.feixie.xfplayer.utils.TimeUtil;
 
@@ -42,9 +45,7 @@ import uk.me.feixie.xfplayer.utils.TimeUtil;
  */
 public class LocalFragmentVideo extends Fragment {
 
-    private RecyclerView rvLocalVideo;
     private List<Video> localVideoList;
-    private MyRVAdapter mRvAdapter;
 
     public LocalFragmentVideo() {
         // Required empty public constructor
@@ -61,7 +62,7 @@ public class LocalFragmentVideo extends Fragment {
 
     private void initViews(View view) {
 
-        rvLocalVideo = (RecyclerView) view.findViewById(R.id.rvLocalVideo);
+        RecyclerView rvLocalVideo = (RecyclerView) view.findViewById(R.id.rvLocalVideo);
         localVideoList = new ArrayList<>();
 
         String[] projection = new String[]{MediaStore.Video.Media._ID, MediaStore.Video.Media.TITLE,
@@ -96,8 +97,8 @@ public class LocalFragmentVideo extends Fragment {
         rvLocalVideo.setLayoutManager(new LinearLayoutManager(getContext()));
         rvLocalVideo.setHasFixedSize(true);
         rvLocalVideo.setItemAnimator(new DefaultItemAnimator());
-        mRvAdapter = new MyRVAdapter();
-        rvLocalVideo.setAdapter(mRvAdapter);
+        MyRVAdapter rvAdapter = new MyRVAdapter();
+        rvLocalVideo.setAdapter(rvAdapter);
 
     }
 
@@ -122,10 +123,16 @@ public class LocalFragmentVideo extends Fragment {
             llLocalVideoCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    System.out.println(getAdapterPosition());
-                    Intent intent = new Intent(getActivity(), ShowActivity.class);
-                    intent.putExtra("video_path",localVideoList.get(getAdapterPosition()).getData());
-                    startActivity(intent);
+                    Video video = localVideoList.get(getAdapterPosition());
+                    if (video.getData().contains(".mp4")||video.getData().contains(".3gp")) {
+                        Intent intent = new Intent(getActivity(), OriginalShowActivity.class);
+                        intent.putExtra("video_path",video.getData());
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(getActivity(), ShowActivity.class);
+                        intent.putExtra("video_path",video.getData());
+                        startActivity(intent);
+                    }
                 }
             });
         }

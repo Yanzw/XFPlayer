@@ -30,6 +30,7 @@ import uk.me.feixie.xfplayer.BuildConfig;
 import uk.me.feixie.xfplayer.R;
 import uk.me.feixie.xfplayer.fragment.LiveFragment;
 import uk.me.feixie.xfplayer.fragment.LocalFragmentDirectories;
+import uk.me.feixie.xfplayer.fragment.LocalFragmentMusic;
 import uk.me.feixie.xfplayer.fragment.LocalFragmentVideo;
 import uk.me.feixie.xfplayer.fragment.MeFragment;
 import uk.me.feixie.xfplayer.fragment.ServerFragment;
@@ -112,13 +113,33 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rbLocal:
-                        LocalFragmentVideo localFragment = (LocalFragmentVideo) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_VIDEO);
-                        if (localFragment!=null) {
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment).commit();
-                        } else {
-                            localFragment = new LocalFragmentVideo();
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment,GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
+//                        System.out.println(lvLeftMenu.getCheckedItemPosition());
+                        if (lvLeftMenu.getCheckedItemPosition()==0) {
+                            LocalFragmentVideo localFragment = (LocalFragmentVideo) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_VIDEO);
+                            if (localFragment!=null) {
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment).commit();
+                            } else {
+                                localFragment = new LocalFragmentVideo();
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment,GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
+                            }
+                        } else if (lvLeftMenu.getCheckedItemPosition()==1) {
+                            LocalFragmentMusic localFragment = (LocalFragmentMusic) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_AUDIO);
+                            if (localFragment!=null) {
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment).commit();
+                            } else {
+                                localFragment = new LocalFragmentMusic();
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment,GloableConstants.FRAGMENT_LOCAL_AUDIO).commit();
+                            }
+                        } else if (lvLeftMenu.getCheckedItemPosition()==2) {
+                            LocalFragmentDirectories localFragment = (LocalFragmentDirectories) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_DIRECTORIES);
+                            if (localFragment!=null) {
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment).commit();
+                            } else {
+                                localFragment = new LocalFragmentDirectories();
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment,GloableConstants.FRAGMENT_LOCAL_DIRECTORIES).commit();
+                            }
                         }
+
                         break;
                     case R.id.rbServer:
                         ServerFragment serverFragment = (ServerFragment) mFragmentManager.findFragmentByTag("serverFragment");
@@ -155,8 +176,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Fragment localFragmentVideo = mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_VIDEO);
-                Fragment localFragmentDirectories = mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_DIRECTORIES);
+                LocalFragmentVideo localFragmentVideo = (LocalFragmentVideo) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_VIDEO);
+                LocalFragmentDirectories localFragmentDirectories = (LocalFragmentDirectories) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_DIRECTORIES);
+                LocalFragmentMusic localFragmentMusic = (LocalFragmentMusic) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_AUDIO);
                 switch (position) {
                     case 0:
                         if (localFragmentVideo!=null) {
@@ -167,6 +189,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                     case 1:
+                        if (localFragmentMusic!=null) {
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentMusic).commit();
+                        } else {
+                            localFragmentMusic = new LocalFragmentMusic();
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentMusic,GloableConstants.FRAGMENT_LOCAL_AUDIO).commit();
+                        }
                         break;
                     case 2:
                         if (localFragmentDirectories!=null) {

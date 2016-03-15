@@ -50,4 +50,42 @@ public class TimeUtil {
         return(sb.toString());
     }
 
+    //Convert a millisecond duration to a string format like 00:00:00
+    public static String millToString(long millis)
+    {
+        if(millis < 0)
+        {
+            throw new IllegalArgumentException("Duration must be greater than zero!");
+        }
+
+        long hours = TimeUnit.MILLISECONDS.toHours(millis);
+        millis -= TimeUnit.HOURS.toMillis(hours);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+        millis -= TimeUnit.MINUTES.toMillis(minutes);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
+
+        StringBuilder sb = new StringBuilder(64);
+        if (hours!=0) {
+            sb.append(hours);
+            sb.append(":");
+        }
+        if (minutes!=0) {
+            sb.append(minutes);
+            sb.append(":");
+        } else {
+            sb.append("00:");
+        }
+        if (seconds!=0) {
+            sb.append(seconds);
+//            sb.append("");
+        } else {
+            sb.append("00");
+        }
+//        if (hours==0 && minutes==0 && seconds==0 && millis<1000) {
+//            sb.append("<1s");
+//        }
+
+        return(sb.toString());
+    }
+
 }

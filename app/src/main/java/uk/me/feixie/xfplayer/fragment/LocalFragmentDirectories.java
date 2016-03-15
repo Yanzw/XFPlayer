@@ -16,6 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +35,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import uk.me.feixie.xfplayer.R;
+import uk.me.feixie.xfplayer.activity.OriginalShowActivity;
 import uk.me.feixie.xfplayer.activity.ShowActivity;
 import uk.me.feixie.xfplayer.utils.FileUtil;
 
@@ -67,15 +73,24 @@ public class LocalFragmentDirectories extends Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        final RotateAnimation rotate = (RotateAnimation) AnimationUtils.loadAnimation(getContext(), R.anim.back_rotate);
+        rotate.setDuration(500);
+        rotate.setInterpolator(new LinearInterpolator());
 
-        switch (item.getItemId()) {
-            case R.id.action_back:
+        final MenuItem backMenu = menu.findItem(R.id.action_back);
+        View view = View.inflate(getContext(), R.layout.back_action_view, null);
+        backMenu.setActionView(view);
+        backMenu.getActionView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (mFile!=null){
                     File parentFile = mFile.getParentFile();
-                    if(parentFile.isDirectory() && parentFile!=null) {
+                    if(parentFile.isDirectory()) {
                         File[] files = parentFile.listFiles();
                         if (files!=null) {
+                            backMenu.getActionView().startAnimation(rotate);
                             mFileList.clear();
                             for (File file:files) {
                                 mFileList.add(file);
@@ -91,6 +106,17 @@ public class LocalFragmentDirectories extends Fragment {
                 } else {
                     Toast.makeText(getContext(), "This is the root folder!",Toast.LENGTH_SHORT).show();
                 }
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_back:
+
 
                 break;
         }
@@ -173,11 +199,17 @@ public class LocalFragmentDirectories extends Fragment {
                     mFile = mFileList.get(getAdapterPosition());
                     if (mFile.isFile()) {
                         String mimeType = FileUtil.getMimeType(getContext(), Uri.fromFile(mFile));
-                        if (mimeType.contains("mp4") || mimeType.contains("3gp")|| mimeType.contains("avi")
+                        if (mimeType.contains("avi")
                                 || mimeType.contains("m4v")|| mimeType.contains("mov")|| mimeType.contains("mkv")
                                 || mimeType.contains("rmvb")|| mimeType.contains("flv")|| mimeType.contains("wmv")) {
 
                             Intent intent = new Intent(getActivity(), ShowActivity.class);
+                            intent.putExtra("video_path",mFile.getAbsolutePath());
+                            startActivity(intent);
+                        }
+
+                        if (mimeType.contains("mp4") || mimeType.contains("3gp")) {
+                            Intent intent = new Intent(getActivity(), OriginalShowActivity.class);
                             intent.putExtra("video_path",mFile.getAbsolutePath());
                             startActivity(intent);
                         }

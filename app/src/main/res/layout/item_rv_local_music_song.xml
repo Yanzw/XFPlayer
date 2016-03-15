@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/llBySongs"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="10dp">
+
+    <ImageView
+        android:id="@+id/ivMusicIcon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:contentDescription="MusicIcon"
+        android:src="@mipmap/ic_launcher"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp">
+
+        <TextView
+            android:id="@+id/tvMusicTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            tools:text="latenight.mp3"/>
+
+        <TextView
+            android:id="@+id/tvMusicArtist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Unknown Artist"/>
+
+    </LinearLayout>
+
+</LinearLayout>

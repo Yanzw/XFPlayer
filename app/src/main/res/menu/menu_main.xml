@@ -7,7 +7,7 @@
         android:id="@+id/action_back"
         android:orderInCategory="100"
         android:title="Back"
-        android:icon="@android:drawable/ic_menu_revert"
+        android:icon="@drawable/ic_replay_white_24dp"
         android:visible="false"
         app:showAsAction="ifRoom"/>
 

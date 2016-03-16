@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout dlLocal;
     private ListView lvLeftMenu;
     private List<uk.me.feixie.xfplayer.model.MenuItem> menuList;
+    private ActionBar mSupportActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +76,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar()!=null){
-            getSupportActionBar().setTitle("Local");
+        mSupportActionBar = getSupportActionBar();
+        if (mSupportActionBar!=null){
+            mSupportActionBar.setTitle("Local");
         }
 
         LocalFragmentVideo localFragment =  new LocalFragmentVideo();
@@ -83,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
         mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment, GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
 
         rbLocal.setChecked(true);
-        if (rbLocal.isChecked() && getSupportActionBar()!=null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
+        if (rbLocal.isChecked() && mSupportActionBar!=null) {
+            mSupportActionBar.setDisplayHomeAsUpEnabled(true);
+            mSupportActionBar.setHomeButtonEnabled(true);
         }
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, dlLocal, toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -113,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rbLocal:
+                        dlLocal.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                        mSupportActionBar.setTitle("Local");
+                        mSupportActionBar.setDisplayHomeAsUpEnabled(true);
+                        mSupportActionBar.setHomeButtonEnabled(true);
+                        mActionBarDrawerToggle.syncState();
 //                        System.out.println(lvLeftMenu.getCheckedItemPosition());
                         if (lvLeftMenu.getCheckedItemPosition()==0) {
                             LocalFragmentVideo localFragment = (LocalFragmentVideo) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_VIDEO);
@@ -141,7 +149,12 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         break;
+
                     case R.id.rbServer:
+                        dlLocal.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                        mSupportActionBar.setTitle("Server");
+                        mSupportActionBar.setDisplayHomeAsUpEnabled(false);
+                        mSupportActionBar.setHomeButtonEnabled(false);
                         ServerFragment serverFragment = (ServerFragment) mFragmentManager.findFragmentByTag("serverFragment");
                         if (serverFragment!=null) {
                             mFragmentManager.beginTransaction().replace(R.id.rlMain,serverFragment).commit();
@@ -150,7 +163,12 @@ public class MainActivity extends AppCompatActivity {
                             mFragmentManager.beginTransaction().replace(R.id.rlMain,serverFragment,"serverFragment").commit();
                         }
                         break;
+
                     case R.id.rbLive:
+                        dlLocal.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                        mSupportActionBar.setTitle("Live");
+                        mSupportActionBar.setDisplayHomeAsUpEnabled(false);
+                        mSupportActionBar.setHomeButtonEnabled(false);
                         LiveFragment liveFragment = (LiveFragment) mFragmentManager.findFragmentByTag("liveFragment");
                         if (liveFragment!=null) {
                             mFragmentManager.beginTransaction().replace(R.id.rlMain,liveFragment).commit();
@@ -159,7 +177,12 @@ public class MainActivity extends AppCompatActivity {
                             mFragmentManager.beginTransaction().replace(R.id.rlMain,liveFragment,"liveFragment").commit();
                         }
                         break;
+
                     case R.id.rbMe:
+                        dlLocal.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                        mSupportActionBar.setTitle("Me");
+                        mSupportActionBar.setDisplayHomeAsUpEnabled(false);
+                        mSupportActionBar.setHomeButtonEnabled(false);
                         MeFragment meFragment = (MeFragment) mFragmentManager.findFragmentByTag("meFragment");
                         if (meFragment!=null) {
                             mFragmentManager.beginTransaction().replace(R.id.rlMain,meFragment).commit();

@@ -165,7 +165,7 @@ public class LocalFragmentMusicBySong extends Fragment {
                     View snackView = View.inflate(getContext(),R.layout.snackbar_player,null);
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     snackView.setLayoutParams(layoutParams);
-                    // Configure the view
+                    // ----------------- Configure the view -------------------
                     //set seekBar
                     final SeekBar seekBar = (SeekBar) snackView.findViewById(R.id.sbPlayer);
                     seekBar.setMax(Integer.parseInt(music.getDuration()));
@@ -198,10 +198,10 @@ public class LocalFragmentMusicBySong extends Fragment {
                         public void onClick(View v) {
                             if (mMediaPlayer.isPlaying()) {
                                 mMediaPlayer.pause();
-                                ivPlayPause.setImageResource(android.R.drawable.ic_media_pause);
+                                ivPlayPause.setImageResource(android.R.drawable.ic_media_play);
                             } else {
                                 mMediaPlayer.start();
-                                ivPlayPause.setImageResource(android.R.drawable.ic_media_play);
+                                ivPlayPause.setImageResource(android.R.drawable.ic_media_pause);
                             }
                         }
                     });
@@ -226,6 +226,7 @@ public class LocalFragmentMusicBySong extends Fragment {
                             @Override
                             public void onCompletion(MediaPlayer mp) {
                                 ivPlayPause.setImageResource(android.R.drawable.ic_media_play);
+                                seekBar.setProgress(0);
                             }
                         });
                         mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {

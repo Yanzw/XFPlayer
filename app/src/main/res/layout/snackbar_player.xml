@@ -54,7 +54,7 @@
             android:id="@+id/ivPlayPause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="Play"
+            android:contentDescription="@string/play"
             android:layout_marginLeft="10dp"
             android:src="@android:drawable/ic_media_pause"/>
 

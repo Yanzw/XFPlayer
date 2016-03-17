@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="20dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/ttlServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/acServerAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_network_mrl_e_g_http_mms_or_rtsp"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right">
+
+        <Button
+            android:id="@+id/btnServerDialogCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CANCEL"
+            android:background="@android:color/transparent"
+            android:textColor="@color/tfblue"/>
+
+        <Button
+            android:id="@+id/btnServerDialogPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PLAY"
+            android:textColor="@color/tfblue"
+            android:background="@android:color/transparent"/>
+
+    </LinearLayout>
+
+</LinearLayout>

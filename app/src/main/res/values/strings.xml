@@ -17,4 +17,5 @@
     <string name="video">Video</string>
     <string name="play">Play</string>
     <string name="server_video">Server Video</string>
+    <string name="enter_network_mrl_e_g_http_mms_or_rtsp">Enter network MRL: e.g. http://, mms:// or rtsp://</string>
 </resources>

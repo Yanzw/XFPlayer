@@ -8,12 +8,12 @@ import java.util.ArrayList;
  */
 public class ServerData implements Serializable {
 
-    public ArrayList<ServerMovie> movies;
+    public ArrayList<ServerMovie> data;
 
     @Override
     public String toString() {
         return "ServerData{" +
-                "movies=" + movies +
+                "movies=" + data +
                 '}';
     }
 

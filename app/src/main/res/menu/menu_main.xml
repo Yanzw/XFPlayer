@@ -12,8 +12,16 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_server"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"/>
+        android:title="Server"
+        android:icon="@drawable/ic_cloud_circle_white_24dp"
+        android:visible="false"
+        app:showAsAction="ifRoom"/>
+
+    <!--<item-->
+        <!--android:id="@+id/action_settings"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/action_settings"-->
+        <!--app:showAsAction="never"/>-->
 </menu>

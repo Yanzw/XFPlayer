@@ -2,6 +2,7 @@ package uk.me.feixie.xfplayer.activity;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
     private RelativeLayout rlShow;
     private static final double SCALE_RATIO = 2.5;
     private String mVideo_path;
+//    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,17 +104,23 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Toast.makeText(this, "onCompletion", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "onCompletion", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        Toast.makeText(this, "onError", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "onError", Toast.LENGTH_SHORT).show();
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                finish();
+//            }
+//        },2000);
         return false;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        Toast.makeText(this, "onPrepared", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "onPrepared", Toast.LENGTH_SHORT).show();
     }
 }

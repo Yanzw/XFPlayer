@@ -111,19 +111,6 @@ public class LocalFragmentDirectories extends Fragment {
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.action_back:
-
-
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private void initViews(View view) {
 
         //initial views

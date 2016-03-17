@@ -11,6 +11,7 @@
         android:id="@+id/ivServerMovieIcon"
         android:layout_width="100dp"
         android:layout_height="138dp"
+        android:layout_marginTop="20dp"
         android:contentDescription="@string/server_video"
         android:layout_gravity="center_horizontal"/>
 
@@ -20,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        tool:text="捉妖记"/>
+        android:maxLines="2"
+        tool:text="捉妖记捉妖记捉妖记捉妖记捉妖记"/>
 
 </LinearLayout>

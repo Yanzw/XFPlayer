@@ -54,6 +54,7 @@ public class ServerFragment extends Fragment {
     private ProgressBar progressBar;
     private ArrayList<ServerData.ServerMovie> mServerMoviesList;
     private ImageOptions mImageOptions;
+    private ServerAdapter mAdapter;
 
     public ServerFragment() {
         // Required empty public constructor
@@ -109,8 +110,8 @@ public class ServerFragment extends Fragment {
                 .setFailureDrawableId(R.mipmap.ic_launcher)
                 .build();
 
-        ServerAdapter adapter = new ServerAdapter();
-        rvServerContent.setAdapter(adapter);
+        mAdapter = new ServerAdapter();
+        rvServerContent.setAdapter(mAdapter);
     }
 
     private void initData() {
@@ -212,6 +213,7 @@ public class ServerFragment extends Fragment {
         Gson gson = new Gson();
         ServerData serverData = gson.fromJson(result, ServerData.class);
         mServerMoviesList = serverData.data;
+        mAdapter.notifyDataSetChanged();
     }
 
     /*----------------Recycler ViewHolder and Adapter-----------------------*/

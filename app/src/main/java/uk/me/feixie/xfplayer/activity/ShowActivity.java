@@ -5,6 +5,8 @@ import android.content.res.Configuration;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
@@ -35,6 +37,10 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
         mVideo_path = getIntent().getStringExtra("video_path");
 
         initViews();
+
+        // listen phone state and deal with different situations
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        telephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
     private void initViews() {
@@ -123,4 +129,21 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
     public void onPrepared(MediaPlayer mp) {
 //        Toast.makeText(this, "onPrepared", Toast.LENGTH_SHORT).show();
     }
+
+    PhoneStateListener mPhoneStateListener = new PhoneStateListener(){
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            switch (state) {
+                case TelephonyManager.CALL_STATE_IDLE:
+                    break;
+                case TelephonyManager.CALL_STATE_OFFHOOK:
+                    break;
+                case TelephonyManager.CALL_STATE_RINGING:
+                    if (vvShow.isPlaying()) {
+                        vvShow.pause();
+                    }
+                    break;
+            }
+        }
+    };
 }

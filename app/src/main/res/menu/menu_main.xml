@@ -19,6 +19,14 @@
         android:visible="false"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/action_radio"
+        android:orderInCategory="100"
+        android:title="Radio"
+        android:visible="false"
+        android:icon="@android:drawable/ic_media_play"
+        app:showAsAction="ifRoom"/>
+
     <!--<item-->
         <!--android:id="@+id/action_settings"-->
         <!--android:orderInCategory="100"-->

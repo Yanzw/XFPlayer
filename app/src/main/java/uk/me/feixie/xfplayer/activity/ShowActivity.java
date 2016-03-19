@@ -1,14 +1,11 @@
 package uk.me.feixie.xfplayer.activity;
 
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -17,13 +14,13 @@ import io.vov.vitamio.widget.MediaController;
 import io.vov.vitamio.widget.VideoView;
 import uk.me.feixie.xfplayer.R;
 
-public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
+public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 
     private VideoView vvShow;
     private RelativeLayout rlShow;
     private static final double SCALE_RATIO = 2.5;
     private String mVideo_path;
-//    private Handler mHandler = new Handler();
+    //    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +45,19 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
         vvShow = (VideoView) findViewById(R.id.vvShow);
 
 //        System.out.println(getResources().getConfiguration().orientation+"///"+ Configuration.ORIENTATION_LANDSCAPE);
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             rlShow.getLayoutParams().height = RelativeLayout.LayoutParams.MATCH_PARENT;
             rlShow.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
             vvShow.getLayoutParams().height = RelativeLayout.LayoutParams.MATCH_PARENT;
             vvShow.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            vvShow.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH,0);
+            vvShow.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH, 0);
         } else {
-            int height =  getWindowManager().getDefaultDisplay().getHeight();
-            rlShow.getLayoutParams().height = (int) (height/SCALE_RATIO);
+            int height = getWindowManager().getDefaultDisplay().getHeight();
+            rlShow.getLayoutParams().height = (int) (height / SCALE_RATIO);
             rlShow.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            vvShow.getLayoutParams().height = (int) (height/SCALE_RATIO);
+            vvShow.getLayoutParams().height = (int) (height / SCALE_RATIO);
             vvShow.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            vvShow.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH,0);
+            vvShow.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH, 0);
         }
 
 //        vvShow.setVideoPath("http://192.168.0.2/tycq.mkv");
@@ -68,14 +65,16 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
 //        vvShow.setVideoPath("http://zv.3gv.ifeng.com/live/zixun800k.m3u8");
 //        MediaController controller = new MediaController(this);
         if (!TextUtils.isEmpty(mVideo_path)) {
+
             vvShow.setVideoPath(mVideo_path);
             vvShow.setMediaController(new MediaController(this));
             vvShow.setOnCompletionListener(this);
             vvShow.setOnErrorListener(this);
-            vvShow.setOnPreparedListener(this);
+            vvShow.setOnBufferingUpdateListener(this);
             vvShow.start();
+
         } else {
-            Toast.makeText(this,"No video found!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No video found!", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -99,12 +98,12 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
 //            rlShow.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
 //            mVideoView.setVideoScale(LayoutParams.MATCH_PARENT, DensityUtils.dp2px(TvPlayActivity.this, 230));
 //            vvShow.getHolder().setFixedSize(vvShow.getLayoutParams().width, vvShow.getLayoutParams().height);
-            int height =  getWindowManager().getDefaultDisplay().getHeight();
-            rlShow.getLayoutParams().height = (int) (height/SCALE_RATIO);
+            int height = getWindowManager().getDefaultDisplay().getHeight();
+            rlShow.getLayoutParams().height = (int) (height / SCALE_RATIO);
             rlShow.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            vvShow.getLayoutParams().height = (int) (height/SCALE_RATIO);
+            vvShow.getLayoutParams().height = (int) (height / SCALE_RATIO);
             vvShow.getLayoutParams().width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            vvShow.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH,0);
+            vvShow.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH, 0);
         }
     }
 
@@ -125,12 +124,8 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
         return false;
     }
 
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-//        Toast.makeText(this, "onPrepared", Toast.LENGTH_SHORT).show();
-    }
 
-    PhoneStateListener mPhoneStateListener = new PhoneStateListener(){
+    PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             switch (state) {
@@ -146,4 +141,9 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
             }
         }
     };
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+
+    }
 }

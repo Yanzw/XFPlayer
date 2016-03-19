@@ -17,4 +17,7 @@ public class GloableConstants {
     public static final String[] AUTO_COMPLETE_SERVER = {"http://", "https://", "mms://", "rtsp://",
             "http://www.", "https://www."};
 
+    public static final int RADIO_READY = 1000;
+
+
 }

@@ -1,9 +1,7 @@
 package uk.me.feixie.xfplayer.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,7 +21,6 @@ import android.widget.TextView;
 
 import org.xutils.x;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         x.Ext.setDebug(BuildConfig.DEBUG);
 //        x.view().inject(this);
         setContentView(R.layout.activity_main);
+        //check vitamio ready
+        if (!io.vov.vitamio.LibsChecker.checkVitamioLibs(this))
+            return;
         initData();
         initViews();
         initListeners();
@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         rbLocal = (RadioButton) findViewById(R.id.rbLocal);
         rgMain = (RadioGroup) findViewById(R.id.rgMain);
 
-        dlLocal = (DrawerLayout)findViewById(R.id.dlLocal);
-        lvLeftMenu = (ListView)findViewById(R.id.lvLeftMenu);
+        dlLocal = (DrawerLayout) findViewById(R.id.dlLocal);
+        lvLeftMenu = (ListView) findViewById(R.id.lvLeftMenu);
 
         MyListAdapter listAdapter = new MyListAdapter();
         lvLeftMenu.setAdapter(listAdapter);
@@ -77,16 +77,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mSupportActionBar = getSupportActionBar();
-        if (mSupportActionBar!=null){
+        if (mSupportActionBar != null) {
             mSupportActionBar.setTitle("Local");
         }
 
-        LocalFragmentVideo localFragment =  new LocalFragmentVideo();
+        LocalFragmentVideo localFragment = new LocalFragmentVideo();
         mFragmentManager = getSupportFragmentManager();
-        mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment, GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
+        mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragment, GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
 
         rbLocal.setChecked(true);
-        if (rbLocal.isChecked() && mSupportActionBar!=null) {
+        if (rbLocal.isChecked() && mSupportActionBar != null) {
             mSupportActionBar.setDisplayHomeAsUpEnabled(true);
             mSupportActionBar.setHomeButtonEnabled(true);
         }
@@ -122,29 +122,29 @@ public class MainActivity extends AppCompatActivity {
                         mSupportActionBar.setHomeButtonEnabled(true);
                         mActionBarDrawerToggle.syncState();
 //                        System.out.println(lvLeftMenu.getCheckedItemPosition());
-                        if (lvLeftMenu.getCheckedItemPosition()==0) {
+                        if (lvLeftMenu.getCheckedItemPosition() == 0) {
                             LocalFragmentVideo localFragment = (LocalFragmentVideo) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_VIDEO);
-                            if (localFragment!=null) {
-                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment).commit();
+                            if (localFragment != null) {
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragment).commit();
                             } else {
                                 localFragment = new LocalFragmentVideo();
-                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment,GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragment, GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
                             }
-                        } else if (lvLeftMenu.getCheckedItemPosition()==1) {
+                        } else if (lvLeftMenu.getCheckedItemPosition() == 1) {
                             LocalFragmentMusic localFragment = (LocalFragmentMusic) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_AUDIO);
-                            if (localFragment!=null) {
-                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment).commit();
+                            if (localFragment != null) {
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragment).commit();
                             } else {
                                 localFragment = new LocalFragmentMusic();
-                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment,GloableConstants.FRAGMENT_LOCAL_AUDIO).commit();
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragment, GloableConstants.FRAGMENT_LOCAL_AUDIO).commit();
                             }
-                        } else if (lvLeftMenu.getCheckedItemPosition()==2) {
+                        } else if (lvLeftMenu.getCheckedItemPosition() == 2) {
                             LocalFragmentDirectories localFragment = (LocalFragmentDirectories) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_DIRECTORIES);
-                            if (localFragment!=null) {
-                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment).commit();
+                            if (localFragment != null) {
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragment).commit();
                             } else {
                                 localFragment = new LocalFragmentDirectories();
-                                mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragment,GloableConstants.FRAGMENT_LOCAL_DIRECTORIES).commit();
+                                mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragment, GloableConstants.FRAGMENT_LOCAL_DIRECTORIES).commit();
                             }
                         }
 
@@ -156,11 +156,11 @@ public class MainActivity extends AppCompatActivity {
                         mSupportActionBar.setDisplayHomeAsUpEnabled(false);
                         mSupportActionBar.setHomeButtonEnabled(false);
                         ServerFragment serverFragment = (ServerFragment) mFragmentManager.findFragmentByTag("serverFragment");
-                        if (serverFragment!=null) {
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,serverFragment).commit();
+                        if (serverFragment != null) {
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, serverFragment).commit();
                         } else {
                             serverFragment = new ServerFragment();
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,serverFragment,"serverFragment").commit();
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, serverFragment, "serverFragment").commit();
                         }
                         break;
 
@@ -170,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
                         mSupportActionBar.setDisplayHomeAsUpEnabled(false);
                         mSupportActionBar.setHomeButtonEnabled(false);
                         LiveFragment liveFragment = (LiveFragment) mFragmentManager.findFragmentByTag("liveFragment");
-                        if (liveFragment!=null) {
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,liveFragment).commit();
+                        if (liveFragment != null) {
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, liveFragment).commit();
                         } else {
                             liveFragment = new LiveFragment();
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,liveFragment,"liveFragment").commit();
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, liveFragment, "liveFragment").commit();
                         }
                         break;
 
@@ -184,11 +184,11 @@ public class MainActivity extends AppCompatActivity {
                         mSupportActionBar.setDisplayHomeAsUpEnabled(false);
                         mSupportActionBar.setHomeButtonEnabled(false);
                         MeFragment meFragment = (MeFragment) mFragmentManager.findFragmentByTag("meFragment");
-                        if (meFragment!=null) {
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,meFragment).commit();
+                        if (meFragment != null) {
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, meFragment).commit();
                         } else {
                             meFragment = new MeFragment();
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,meFragment,"meFragment").commit();
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, meFragment, "meFragment").commit();
                         }
                         break;
                 }
@@ -204,27 +204,27 @@ public class MainActivity extends AppCompatActivity {
                 LocalFragmentMusic localFragmentMusic = (LocalFragmentMusic) mFragmentManager.findFragmentByTag(GloableConstants.FRAGMENT_LOCAL_AUDIO);
                 switch (position) {
                     case 0:
-                        if (localFragmentVideo!=null) {
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentVideo).commit();
+                        if (localFragmentVideo != null) {
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragmentVideo).commit();
                         } else {
                             localFragmentVideo = new LocalFragmentVideo();
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentVideo,GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragmentVideo, GloableConstants.FRAGMENT_LOCAL_VIDEO).commit();
                         }
                         break;
                     case 1:
-                        if (localFragmentMusic!=null) {
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentMusic).commit();
+                        if (localFragmentMusic != null) {
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragmentMusic).commit();
                         } else {
                             localFragmentMusic = new LocalFragmentMusic();
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentMusic,GloableConstants.FRAGMENT_LOCAL_AUDIO).commit();
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragmentMusic, GloableConstants.FRAGMENT_LOCAL_AUDIO).commit();
                         }
                         break;
                     case 2:
-                        if (localFragmentDirectories!=null) {
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentDirectories).commit();
+                        if (localFragmentDirectories != null) {
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragmentDirectories).commit();
                         } else {
                             localFragmentDirectories = new LocalFragmentDirectories();
-                            mFragmentManager.beginTransaction().replace(R.id.rlMain,localFragmentDirectories,GloableConstants.FRAGMENT_LOCAL_DIRECTORIES).commit();
+                            mFragmentManager.beginTransaction().replace(R.id.rlMain, localFragmentDirectories, GloableConstants.FRAGMENT_LOCAL_DIRECTORIES).commit();
                         }
                         break;
                 }

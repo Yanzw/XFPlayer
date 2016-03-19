@@ -1,6 +1,7 @@
 package uk.me.feixie.xfplayer.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.me.feixie.xfplayer.R;
+import uk.me.feixie.xfplayer.service.RadioService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +61,25 @@ public class LiveFragment extends Fragment {
         vpLive.setAdapter(new MyPagerAdapter(getChildFragmentManager()));
         vpLive.setCurrentItem(0);
         tlLive.setupWithViewPager(vpLive);
+        vpLive.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position==0) {
+                    Intent intent = new Intent(getActivity(), RadioService.class);
+                    getActivity().stopService(intent);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 

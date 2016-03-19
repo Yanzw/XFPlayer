@@ -39,10 +39,17 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullScreen">
         </activity>
-        <activity android:name=".activity.OriginalShowActivity"
-                  android:configChanges="orientation|keyboardHidden|screenSize"
-                  android:theme="@style/FullScreen">
+        <activity
+            android:name=".activity.OriginalShowActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FullScreen">
         </activity>
+
+        <service
+            android:name=".service.RadioService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

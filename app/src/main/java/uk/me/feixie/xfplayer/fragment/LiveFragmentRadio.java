@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +48,6 @@ public class LiveFragmentRadio extends Fragment {
     private MenuItem mRadioMenu;
     private ProgressBar pbRadio;
     private View mViewPlay;
-    private View mViewPause;
     private boolean isPlay = false;
     private String mCurrentVideoPath;
     private Handler mHandler = new Handler() {
@@ -59,6 +59,9 @@ public class LiveFragmentRadio extends Fragment {
                     pbRadio.setVisibility(View.GONE);
                     mIvPlay.setImageResource(android.R.drawable.ic_media_pause);
                     break;
+                case GloableConstants.RADIO_ERROR:
+                    pbRadio.setVisibility(View.GONE);
+                    break;
             }
         }
     };
@@ -68,10 +71,10 @@ public class LiveFragmentRadio extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_live_fragment_radio, container, false);
         setHasOptionsMenu(true);
@@ -123,6 +126,10 @@ public class LiveFragmentRadio extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (mRadioMenu!=null) {
+            mRadioMenu.setVisible(false);
+        }
+
     }
 
     @Override

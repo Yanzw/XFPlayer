@@ -24,6 +24,7 @@ import org.xutils.x;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.vov.vitamio.Vitamio;
 import uk.me.feixie.xfplayer.BuildConfig;
 import uk.me.feixie.xfplayer.R;
 import uk.me.feixie.xfplayer.fragment.LiveFragment;
@@ -54,12 +55,24 @@ public class MainActivity extends AppCompatActivity {
         x.Ext.setDebug(BuildConfig.DEBUG);
 //        x.view().inject(this);
         setContentView(R.layout.activity_main);
-        //check vitamio ready
-        if (!io.vov.vitamio.LibsChecker.checkVitamioLibs(this))
-            return;
+
+//        check vitamio ready
+//        if (!io.vov.vitamio.LibsChecker.checkVitamioLibs(this))
+//            return;
+
+        Vitamio.isInitialized(this);
+
         initData();
         initViews();
         initListeners();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        if (!io.vov.vitamio.LibsChecker.checkVitamioLibs(this))
+//            return;
+        Vitamio.isInitialized(this);
     }
 
     private void initViews() {
@@ -165,6 +178,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.rbLive:
+//                        if (!io.vov.vitamio.LibsChecker.checkVitamioLibs(MainActivity.this))
+//                            return;
                         dlLocal.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                         mSupportActionBar.setTitle("Live");
                         mSupportActionBar.setDisplayHomeAsUpEnabled(false);

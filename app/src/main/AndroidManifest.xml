@@ -37,6 +37,7 @@
         <activity
             android:name=".activity.ShowActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":vitamio"
             android:theme="@style/FullScreen">
         </activity>
         <activity

@@ -7,16 +7,17 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import java.io.IOException;
 
 import io.vov.vitamio.MediaPlayer;
+import io.vov.vitamio.Vitamio;
 import uk.me.feixie.xfplayer.utils.GloableConstants;
 
 public class RadioService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener {
 
     private MediaPlayer mMediaPlayer;
-    private String mRadio_path;
     private Messenger mMessenger;
 
     public RadioService() {
@@ -29,15 +30,17 @@ public class RadioService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Vitamio.isInitialized(this);
 
-        mRadio_path = intent.getStringExtra("radio_path");
+        String radio_path = intent.getStringExtra("radio_path");
+//        System.out.println(mRadio_path);
         String command = intent.getStringExtra("command");
         if (mMessenger==null) {
             mMessenger = intent.getParcelableExtra("messenger");
         }
 
-        if (command.equalsIgnoreCase("play") && !TextUtils.isEmpty(mRadio_path)) {
-            play(mRadio_path);
+        if (command.equalsIgnoreCase("play") && !TextUtils.isEmpty(radio_path)) {
+            play(radio_path);
         }
         if (command.equalsIgnoreCase("pause")) {
             pause();
@@ -106,7 +109,15 @@ public class RadioService extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         System.out.println("onError");
-        return false;
+        Message msg = Message.obtain();
+        msg.what = GloableConstants.RADIO_ERROR;
+        try {
+            mMessenger.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(this,"Radio source can not be played!",Toast.LENGTH_SHORT).show();
+        return true;
     }
 
     @Override
@@ -119,4 +130,5 @@ public class RadioService extends Service implements MediaPlayer.OnPreparedListe
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
 //        System.out.println(percent);
     }
+
 }

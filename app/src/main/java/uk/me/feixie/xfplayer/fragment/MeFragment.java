@@ -30,6 +30,7 @@ import uk.me.feixie.xfplayer.utils.GloableConstants;
 public class MeFragment extends Fragment {
 
     private List<WatchedItem> mWatchedList;
+    private MyAdapter mAdapter;
 
 
     public MeFragment() {
@@ -40,7 +41,7 @@ public class MeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+//        System.out.println("onCreateView");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_me, container, false);
         initData();
@@ -51,6 +52,7 @@ public class MeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+//        System.out.println("onstart");
         initData();
     }
 
@@ -87,12 +89,18 @@ public class MeFragment extends Fragment {
             mWatchedList.add(live);
         }
 
+        if (mAdapter!=null) {
+            mAdapter.notifyDataSetChanged();
+        } else {
+            mAdapter = new MyAdapter();
+        }
     }
 
     private void initViews(View view) {
         ListView lvMe = (ListView) view.findViewById(R.id.lvMe);
 //        System.out.println(mWatchedList.toString());
-        lvMe.setAdapter(new MyAdapter());
+        mAdapter = new MyAdapter();
+        lvMe.setAdapter(mAdapter);
         lvMe.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -24,11 +24,6 @@ public class RadioService extends Service implements MediaPlayer.OnPreparedListe
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Vitamio.isInitialized(this);
 

@@ -1,12 +1,15 @@
 package uk.me.feixie.xfplayer.fragment;
 
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -33,6 +36,8 @@ import java.util.List;
 
 import uk.me.feixie.xfplayer.R;
 import uk.me.feixie.xfplayer.model.Music;
+import uk.me.feixie.xfplayer.service.MusicService;
+import uk.me.feixie.xfplayer.utils.GloableConstants;
 import uk.me.feixie.xfplayer.utils.TimeUtil;
 
 /**
@@ -41,9 +46,27 @@ import uk.me.feixie.xfplayer.utils.TimeUtil;
 public class LocalFragmentMusicBySong extends Fragment {
 
     private List<Music> mMusicList;
-    private MediaPlayer mMediaPlayer;
-    private Handler mHandler = new Handler();
     private int mDelay = 1000;
+
+    //views from snackbar
+    private ImageView mIvPlayPause;
+    private SeekBar mSeekBar;
+    private boolean isPlaying;
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case GloableConstants.MUSIC_COMPLETE:
+                    mIvPlayPause.setImageResource(android.R.drawable.ic_media_play);
+                    isPlaying = false;
+//                    mSeekBar.setProgress(0);
+                    break;
+            }
+        }
+    };
+
+
 
     public LocalFragmentMusicBySong() {
         // Required empty public constructor
@@ -58,6 +81,12 @@ public class LocalFragmentMusicBySong extends Fragment {
         initData();
         initViews(view);
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     private void initData() {
@@ -146,13 +175,13 @@ public class LocalFragmentMusicBySong extends Fragment {
             llBySongs.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Music music = mMusicList.get(getAdapterPosition());
-
-                    if (mMediaPlayer!=null) {
-                        mMediaPlayer.release();
-                        mMediaPlayer = null;
-                    }
-                    mMediaPlayer = new MediaPlayer();
+                    final Music music = mMusicList.get(getAdapterPosition());
+                    isPlaying = true;
+//                    if (mMediaPlayer!=null) {
+//                        mMediaPlayer.release();
+//                        mMediaPlayer = null;
+//                    }
+//                    mMediaPlayer = new MediaPlayer();
 
                     // Create the Snackbar
                     Snackbar snackBar = Snackbar.make(itemView, "Music", Snackbar.LENGTH_INDEFINITE);
@@ -167,12 +196,12 @@ public class LocalFragmentMusicBySong extends Fragment {
                     snackView.setLayoutParams(layoutParams);
                     // ----------------- Configure the view -------------------
                     //set seekBar
-                    final SeekBar seekBar = (SeekBar) snackView.findViewById(R.id.sbPlayer);
-                    seekBar.setMax(Integer.parseInt(music.getDuration()));
+                    mSeekBar = (SeekBar) snackView.findViewById(R.id.sbPlayer);
+                    mSeekBar.setMax(Integer.parseInt(music.getDuration()));
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            seekBar.setProgress(mDelay);
+                            mSeekBar.setProgress(mDelay);
                             mDelay=+1000;
                         }
                     },1000);
@@ -190,19 +219,27 @@ public class LocalFragmentMusicBySong extends Fragment {
                     tvTimePlayer.setText(duration);
                     tvTimePlayer.setTextColor(Color.WHITE);
 
-                    final ImageView ivPlayPause = (ImageView) snackView.findViewById(R.id.ivPlayPause);
+                    mIvPlayPause = (ImageView) snackView.findViewById(R.id.ivPlayPause);
 
                     LinearLayout llPlayerControl = (LinearLayout) snackView.findViewById(R.id.llPlayControl);
                     llPlayerControl.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (mMediaPlayer.isPlaying()) {
-                                mMediaPlayer.pause();
-                                ivPlayPause.setImageResource(android.R.drawable.ic_media_play);
+                            Intent intent = new Intent();
+                            if (isPlaying) {
+                                intent.setClass(getActivity(), MusicService.class);
+                                intent.putExtra("command","pause");
+                                getActivity().startService(intent);
+                                mIvPlayPause.setImageResource(android.R.drawable.ic_media_play);
                             } else {
-                                mMediaPlayer.start();
-                                ivPlayPause.setImageResource(android.R.drawable.ic_media_pause);
+                                intent.setClass(getActivity(), MusicService.class);
+                                intent.putExtra("music_path",music.getData());
+                                intent.putExtra("command","play");
+                                getActivity().startService(intent);
+                                mIvPlayPause.setImageResource(android.R.drawable.ic_media_pause);
+                                mSeekBar.setProgress(0);
                             }
+                            isPlaying = !isPlaying;
                         }
                     });
 
@@ -211,33 +248,43 @@ public class LocalFragmentMusicBySong extends Fragment {
                     // Show the Snackbar
                     snackBar.show();
 
-                    try {
-                        mMediaPlayer.setDataSource(music.getData());
-                        mMediaPlayer.prepare();
+//                    try {
+//                        mMediaPlayer.setDataSource(music.getData());
+//                        mMediaPlayer.prepare();
+//
+//                        mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+//                            @Override
+//                            public boolean onError(MediaPlayer mp, int what, int extra) {
+//                                System.out.println("onError");
+//                                return true;
+//                            }
+//                        });
+//                        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                            @Override
+//                            public void onCompletion(MediaPlayer mp) {
+//                                ivPlayPause.setImageResource(android.R.drawable.ic_media_play);
+//                                seekBar.setProgress(0);
+//                            }
+//                        });
+//                        mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+//                            @Override
+//                            public void onSeekComplete(MediaPlayer mp) {
+//                                System.out.println("onSeekComplete");
+//                            }
+//                        });
+//                        mMediaPlayer.start();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                    Intent intent = new Intent(getActivity(), MusicService.class);
+                    intent.putExtra("music_path",music.getData());
+                    intent.putExtra("command","play");
+                    intent.putExtra("messenger",new Messenger(mHandler));
+                    getActivity().startService(intent);
 
-                        mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                            @Override
-                            public boolean onError(MediaPlayer mp, int what, int extra) {
-                                System.out.println("onError");
-                                return true;
-                            }
-                        });
-                        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mp) {
-                                ivPlayPause.setImageResource(android.R.drawable.ic_media_play);
-                                seekBar.setProgress(0);
-                            }
-                        });
-                        mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
-                            @Override
-                            public void onSeekComplete(MediaPlayer mp) {
-                                System.out.println("onSeekComplete");
-                            }
-                        });
-                        mMediaPlayer.start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if (!snackBar.isShown()) {
+                        Intent stopIntent = new Intent(getActivity(), MusicService.class);
+                        getActivity().stopService(stopIntent);
                     }
                 }
             });

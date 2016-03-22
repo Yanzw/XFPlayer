@@ -58,7 +58,6 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM", Locale.getDefault());
         String currentTime = sdf.format(new Date());
@@ -83,6 +82,8 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
             mSharedPreferences.edit().putLong(GloableConstants.MOVIE_CURRENT_POSITION, currentPosition).apply();
             mSharedPreferences.edit().putString("movie_file_path", mVideo_path).apply();
         }
+
+        super.onBackPressed();
     }
 
     private String getVideoTitle(String video_path) {

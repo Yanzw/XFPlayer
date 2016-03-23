@@ -23,10 +23,12 @@ public class GloableConstants {
     public static final int MUSIC_COMPLETE = 1002;
 
     public static final String MOVIE_CURRENT_POSITION = "movie_current_position";
+    public static final String MOVIE_DURATION = "movie_duration";
     public static final String MOVIE_TITLE = "movie_title";
     public static final String MOVIE_WATCHED_DATE = "movie_watched_date";
 
     public static final String VIDEO_CURRENT_POSITION = "video_current_position";
+    public static final String VIDEO_DURATION = "video_duration";
     public static final String VIDEO_TITLE = "video_title";
     public static final String VIDEO_WATCHED_DATE = "video_watched_date";
 
@@ -36,6 +38,7 @@ public class GloableConstants {
     public static final String WATCHED_MOVIE = "watched_movie";
     public static final String WATCHED_VIDEO = "watched_video";
     public static final String WATCHED_LIVE = "watched_live";
+
     public static final int TYPE_VIDEO = 1;
     public static final int TYPE_MOVIE = 2;
     public static final int TYPE_AUDIO = 3;

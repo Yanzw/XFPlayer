@@ -75,11 +75,13 @@ public class ShowActivity extends AppCompatActivity implements MediaPlayer.OnCom
         } else {
             long currentPosition = vvShow.getCurrentPosition();
             String title = getVideoTitle(mVideo_path);
+            long duration = vvShow.getDuration();
 
             mSharedPreferences.edit().putString(GloableConstants.MOVIE_TITLE, title).apply();
             mSharedPreferences.edit().putString(GloableConstants.MOVIE_WATCHED_DATE, currentTime).apply();
             mSharedPreferences.edit().putInt(GloableConstants.WATCHED_MOVIE, GloableConstants.TYPE_MOVIE).apply();
             mSharedPreferences.edit().putLong(GloableConstants.MOVIE_CURRENT_POSITION, currentPosition).apply();
+            mSharedPreferences.edit().putLong(GloableConstants.MOVIE_DURATION, duration).apply();
             mSharedPreferences.edit().putString("movie_file_path", mVideo_path).apply();
         }
 

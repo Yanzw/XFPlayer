@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -61,22 +62,24 @@ public class MeFragment extends Fragment {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         long movieTime = sharedPreferences.getLong(GloableConstants.MOVIE_CURRENT_POSITION, 0);
+        long movieDuration = sharedPreferences.getLong(GloableConstants.MOVIE_DURATION, 0);
         String movieTitle = sharedPreferences.getString(GloableConstants.MOVIE_TITLE, "");
         String movieDate = sharedPreferences.getString(GloableConstants.MOVIE_WATCHED_DATE, "");
         int moveType = sharedPreferences.getInt(GloableConstants.WATCHED_MOVIE,0);
         String movePath = sharedPreferences.getString("movie_file_path","");
         if (!TextUtils.isEmpty(movieTitle)) {
-            WatchedItem movie = new WatchedItem(movieTime,movieTitle,movieDate,moveType,movePath);
+            WatchedItem movie = new WatchedItem(movieTime,movieDuration,movieTitle,movieDate,moveType,movePath);
             mWatchedList.add(movie);
         }
 
         long videoTime = sharedPreferences.getLong(GloableConstants.VIDEO_CURRENT_POSITION, 0);
+        long videoDuration = sharedPreferences.getLong(GloableConstants.VIDEO_DURATION, 0);
         String videoTitle = sharedPreferences.getString(GloableConstants.VIDEO_TITLE, "");
         String videoDate = sharedPreferences.getString(GloableConstants.VIDEO_WATCHED_DATE, "");
         int videoType = sharedPreferences.getInt(GloableConstants.WATCHED_VIDEO, 0);
         String videoPath = sharedPreferences.getString("video_file_path","");
         if (!TextUtils.isEmpty(videoTitle)){
-            WatchedItem video = new WatchedItem(videoTime,videoTitle,videoDate,videoType,videoPath);
+            WatchedItem video = new WatchedItem(videoTime,videoDuration,videoTitle,videoDate,videoType,videoPath);
             mWatchedList.add(video);
         }
 
@@ -85,7 +88,7 @@ public class MeFragment extends Fragment {
         int liveType = sharedPreferences.getInt(GloableConstants.WATCHED_LIVE, 0);
         String livePath = sharedPreferences.getString("live_file_path","");
         if (!TextUtils.isEmpty(videoTitle)){
-            WatchedItem live = new WatchedItem(0,liveTitle,liveDate,liveType,livePath);
+            WatchedItem live = new WatchedItem(0,0,liveTitle,liveDate,liveType,livePath);
             mWatchedList.add(live);
         }
 
@@ -162,10 +165,20 @@ public class MeFragment extends Fragment {
                 convertView = View.inflate(getActivity(), R.layout.item_list_fragment_me,null);
             }
 
+            WatchedItem watchedItem = mWatchedList.get(position);
+
             TextView tvWatchedTitle = (TextView) convertView.findViewById(R.id.tvWatchedTitle);
-            tvWatchedTitle.setText(mWatchedList.get(position).getTitle());
+            tvWatchedTitle.setText(watchedItem.getTitle());
             TextView tvWatchedDate = (TextView) convertView.findViewById(R.id.tvWatchedDate);
-            tvWatchedDate.setText(mWatchedList.get(position).getWatchedDate());
+            tvWatchedDate.setText(watchedItem.getWatchedDate());
+            ProgressBar pbMe = (ProgressBar) convertView.findViewById(R.id.pbMe);
+            if (watchedItem.getCurrentTime()>0){
+                pbMe.setMax((int) watchedItem.getDuration());
+                pbMe.setProgress((int) watchedItem.getCurrentTime());
+                pbMe.setVisibility(View.VISIBLE);
+            } else {
+                pbMe.setVisibility(View.GONE);
+            }
 
             return convertView;
         }

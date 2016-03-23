@@ -6,14 +6,16 @@ package uk.me.feixie.xfplayer.model;
 public class WatchedItem {
 
     private long currentTime;
+    private long duration;
     private String title;
     private String watchedDate;
     private int type;
     private String path;
 
 
-    public WatchedItem(long currentTime, String title, String watchedDate, int type, String path) {
+    public WatchedItem(long currentTime,long duration, String title, String watchedDate, int type, String path) {
         this.currentTime = currentTime;
+        this.duration = duration;
         this.title = title;
         this.watchedDate = watchedDate;
         this.type = type;
@@ -60,10 +62,19 @@ public class WatchedItem {
         this.path = path;
     }
 
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
     @Override
     public String toString() {
         return "WatchedItem{" +
                 "currentTime=" + currentTime +
+                ", duration=" + duration +
                 ", title='" + title + '\'' +
                 ", watchedDate='" + watchedDate + '\'' +
                 ", type=" + type +

@@ -23,7 +23,7 @@ public class LocalFragmentMusic extends Fragment {
 
     private ViewPager vpLocalMusic;
     private List<Fragment> mFragmentList;
-    private TabLayout tlLocalMusic;
+//    private TabLayout tlLocalMusic;
     private List<String> titleList;
 
 
@@ -46,25 +46,25 @@ public class LocalFragmentMusic extends Fragment {
         titleList = new ArrayList<>();
 
         mFragmentList.add(new LocalFragmentMusicBySong());
-        mFragmentList.add(new LocalFragmentMusicBySong());
-        mFragmentList.add(new LocalFragmentMusicBySong());
-        mFragmentList.add(new LocalFragmentMusicBySong());
+//        mFragmentList.add(new LocalFragmentMusicBySong());
+//        mFragmentList.add(new LocalFragmentMusicBySong());
+//        mFragmentList.add(new LocalFragmentMusicBySong());
 
-        titleList.add("SONGS");
-        titleList.add("ARTISTS");
-        titleList.add("ALBUMS");
-        titleList.add("PLAYLIST");
+//        titleList.add("SONGS");
+//        titleList.add("ARTISTS");
+//        titleList.add("ALBUMS");
+//        titleList.add("PLAYLIST");
     }
 
     private void initViews(View view) {
         vpLocalMusic = (ViewPager) view.findViewById(R.id.vpLocalMusic);
-        tlLocalMusic = (TabLayout) view.findViewById(R.id.tlLocalMusic);
+//        tlLocalMusic = (TabLayout) view.findViewById(R.id.tlLocalMusic);
 
         MyViewPagerAdapter pagerAdapter = new MyViewPagerAdapter(getChildFragmentManager());
         vpLocalMusic.setAdapter(pagerAdapter);
         vpLocalMusic.setCurrentItem(0);
 
-        tlLocalMusic.setupWithViewPager(vpLocalMusic);
+//        tlLocalMusic.setupWithViewPager(vpLocalMusic);
     }
 
 

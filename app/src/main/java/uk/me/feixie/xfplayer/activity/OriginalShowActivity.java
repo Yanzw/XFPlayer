@@ -24,6 +24,7 @@ import android.widget.VideoView;
 import com.google.android.gms.cast.ApplicationMetadata;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.gms.cast.RemoteMediaPlayer;
 import com.google.android.libraries.cast.companionlibrary.cast.BaseCastManager;
 import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
@@ -116,13 +117,10 @@ public class OriginalShowActivity extends AppCompatActivity implements MediaPlay
     private void initViews() {
 
         mVvOriginalShow = (VideoView) findViewById(R.id.vvOriginalShow);
-//        ivLocalVideoCast = (ImageView) findViewById(R.id.ivLocalVideoCast);
+
         mMediaRouteButton = (MediaRouteButton) findViewById(R.id.local_media_router_button);
         mVideoCastManager = VideoCastManager.getInstance();
         mVideoCastManager.addMediaRouterButton(mMediaRouteButton);
-
-//        System.out.println(mVideoCastManager.isAnyRouteAvailable());
-//        mMediaRouteButton.setVisibility(mVideoCastManager.isAnyRouteAvailable() ? View.VISIBLE : View.INVISIBLE);
 
         mSelectedMedia = new MediaInfo.Builder(mVideo_path)
                 .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
@@ -156,9 +154,9 @@ public class OriginalShowActivity extends AppCompatActivity implements MediaPlay
                 .enableDebug()
                 .enableLockScreen()
                 .enableWifiReconnection()
-//                .enableNotification()
-//                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
-//                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, true)
+                .enableNotification()
+                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
+                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, true)
                 .build();
 
         VideoCastManager.initialize(this, options);
@@ -177,7 +175,7 @@ public class OriginalShowActivity extends AppCompatActivity implements MediaPlay
 //                mVideoCastManager.startVideoCastControllerActivity(OriginalShowActivity.this, mSelectedMedia,0,true);
 
                 try {
-                    System.out.println(mSelectedMedia.toString());
+
                     mVideoCastManager.loadMedia(mSelectedMedia,true,0);
                     mVideoCastManager.play();
 //                    mVideoCastManager.startVideoCastControllerActivity(OriginalShowActivity.this, mSelectedMedia, 0, true);

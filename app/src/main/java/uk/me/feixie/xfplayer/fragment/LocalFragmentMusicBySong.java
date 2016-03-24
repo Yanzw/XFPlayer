@@ -46,7 +46,6 @@ import uk.me.feixie.xfplayer.utils.TimeUtil;
 public class LocalFragmentMusicBySong extends Fragment {
 
     private List<Music> mMusicList;
-    private int mDelay = 1000;
 
     //views from snackbar
     private ImageView mIvPlayPause;
@@ -58,14 +57,21 @@ public class LocalFragmentMusicBySong extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case GloableConstants.MUSIC_COMPLETE:
+                    int duration = msg.arg1;
+                    mSeekBar.setProgress(duration);
                     mIvPlayPause.setImageResource(android.R.drawable.ic_media_play);
                     isPlaying = false;
 //                    mSeekBar.setProgress(0);
                     break;
+                case GloableConstants.MUSIC_PROGRESS_UPDATE:
+                    int progress = msg.arg1;
+//                    System.out.println(progress);
+                    mSeekBar.setProgress(progress);
+                    break;
             }
         }
     };
-
+    private Snackbar mSnackBar;
 
 
     public LocalFragmentMusicBySong() {
@@ -81,6 +87,12 @@ public class LocalFragmentMusicBySong extends Fragment {
         initData();
         initViews(view);
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSnackBar.dismiss();
     }
 
     @Override
@@ -175,8 +187,16 @@ public class LocalFragmentMusicBySong extends Fragment {
             llBySongs.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     final Music music = mMusicList.get(getAdapterPosition());
                     isPlaying = true;
+
+                    Intent intent = new Intent(getActivity(), MusicService.class);
+                    intent.putExtra("music_path",music.getData());
+                    intent.putExtra("command","play");
+                    intent.putExtra("status",10);
+                    intent.putExtra("messenger",new Messenger(mHandler));
+                    getActivity().startService(intent);
 //                    if (mMediaPlayer!=null) {
 //                        mMediaPlayer.release();
 //                        mMediaPlayer = null;
@@ -184,27 +204,30 @@ public class LocalFragmentMusicBySong extends Fragment {
 //                    mMediaPlayer = new MediaPlayer();
 
                     // Create the Snackbar
-                    Snackbar snackBar = Snackbar.make(itemView, "Music", Snackbar.LENGTH_INDEFINITE);
+                    if (mSnackBar==null || !mSnackBar.isShown()) {
+                        mSnackBar = Snackbar.make(itemView, "Music", Snackbar.LENGTH_INDEFINITE);
+                    }
                     // Get the Snackbar's layout view
-                    Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackBar.getView();
+                    Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) mSnackBar.getView();
                     // Hide the text
                     TextView textView = (TextView) layout.findViewById(android.support.design.R.id.snackbar_text);
                     textView.setVisibility(View.INVISIBLE);
                     // Inflate our custom view
                     View snackView = View.inflate(getContext(),R.layout.snackbar_player,null);
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 250);
                     snackView.setLayoutParams(layoutParams);
                     // ----------------- Configure the view -------------------
                     //set seekBar
                     mSeekBar = (SeekBar) snackView.findViewById(R.id.sbPlayer);
                     mSeekBar.setMax(Integer.parseInt(music.getDuration()));
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mSeekBar.setProgress(mDelay);
-                            mDelay=+1000;
-                        }
-                    },1000);
+//                    System.out.println(music.getDuration());
+//                    mHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            mSeekBar.setProgress(mDelay);
+//                            mDelay=+1000;
+//                        }
+//                    },1000);
 
                     TextView tvTitlePlayer = (TextView) snackView.findViewById(R.id.tvTitlePlayer);
                     tvTitlePlayer.setText(music.getDisplay_name());
@@ -229,12 +252,14 @@ public class LocalFragmentMusicBySong extends Fragment {
                             if (isPlaying) {
                                 intent.setClass(getActivity(), MusicService.class);
                                 intent.putExtra("command","pause");
+                                intent.putExtra("status",11);
                                 getActivity().startService(intent);
                                 mIvPlayPause.setImageResource(android.R.drawable.ic_media_play);
                             } else {
                                 intent.setClass(getActivity(), MusicService.class);
                                 intent.putExtra("music_path",music.getData());
                                 intent.putExtra("command","play");
+                                intent.putExtra("status",11);
                                 getActivity().startService(intent);
                                 mIvPlayPause.setImageResource(android.R.drawable.ic_media_pause);
                                 mSeekBar.setProgress(0);
@@ -246,43 +271,11 @@ public class LocalFragmentMusicBySong extends Fragment {
                     // Add the view to the Snackbar's layout
                     layout.addView(snackView, 0);
                     // Show the Snackbar
-                    snackBar.show();
+                    mSnackBar.show();
 
-//                    try {
-//                        mMediaPlayer.setDataSource(music.getData());
-//                        mMediaPlayer.prepare();
-//
-//                        mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-//                            @Override
-//                            public boolean onError(MediaPlayer mp, int what, int extra) {
-//                                System.out.println("onError");
-//                                return true;
-//                            }
-//                        });
-//                        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                            @Override
-//                            public void onCompletion(MediaPlayer mp) {
-//                                ivPlayPause.setImageResource(android.R.drawable.ic_media_play);
-//                                seekBar.setProgress(0);
-//                            }
-//                        });
-//                        mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
-//                            @Override
-//                            public void onSeekComplete(MediaPlayer mp) {
-//                                System.out.println("onSeekComplete");
-//                            }
-//                        });
-//                        mMediaPlayer.start();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-                    Intent intent = new Intent(getActivity(), MusicService.class);
-                    intent.putExtra("music_path",music.getData());
-                    intent.putExtra("command","play");
-                    intent.putExtra("messenger",new Messenger(mHandler));
-                    getActivity().startService(intent);
 
-                    if (!snackBar.isShown()) {
+
+                    if (!mSnackBar.isShown()) {
                         Intent stopIntent = new Intent(getActivity(), MusicService.class);
                         getActivity().stopService(stopIntent);
                     }

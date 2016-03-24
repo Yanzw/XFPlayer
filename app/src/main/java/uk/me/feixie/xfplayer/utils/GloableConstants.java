@@ -21,6 +21,7 @@ public class GloableConstants {
     public static final int RADIO_ERROR = 1001;
 
     public static final int MUSIC_COMPLETE = 1002;
+    public static final int MUSIC_PROGRESS_UPDATE = 1003;
 
     public static final String MOVIE_CURRENT_POSITION = "movie_current_position";
     public static final String MOVIE_DURATION = "movie_duration";

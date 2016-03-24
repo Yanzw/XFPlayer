@@ -15,7 +15,7 @@ import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.Vitamio;
 import uk.me.feixie.xfplayer.utils.GloableConstants;
 
-public class RadioService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener {
+public class RadioService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnInfoListener {
 
     private MediaPlayer mMediaPlayer;
     private Messenger mMessenger;
@@ -63,6 +63,7 @@ public class RadioService extends Service implements MediaPlayer.OnPreparedListe
         mMediaPlayer.setOnBufferingUpdateListener(this);
         mMediaPlayer.setOnErrorListener(this);
         mMediaPlayer.setOnCompletionListener(this);
+        mMediaPlayer.setOnInfoListener(this);
         mMediaPlayer.releaseDisplay();
         //mms can only be played in this direction
         try {
@@ -126,4 +127,16 @@ public class RadioService extends Service implements MediaPlayer.OnPreparedListe
 //        System.out.println(percent);
     }
 
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+
+        switch (what) {
+            case MediaPlayer.MEDIA_INFO_FILE_OPEN_OK:
+                long buffersize = mp.audioTrackInit();
+                mp.audioInitedOk(buffersize);
+                break;
+        }
+
+        return false;
+    }
 }

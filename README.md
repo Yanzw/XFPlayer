@@ -14,6 +14,7 @@ Features:
 
 Live TV show and radios currently only have CCTV channels available, more channels will be added in the future.
 
+##### You can download the app from <a href="http://www.feixie.me.uk/xfplayer/app-release.apk" target="blank">here</a>.
 
 
 <img src="https://cloud.githubusercontent.com/assets/11439385/14105431/6f88a708-f5a3-11e5-9620-56926fb26c5c.png" width="200" height="350"/>

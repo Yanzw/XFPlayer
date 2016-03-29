@@ -53,6 +53,10 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+        if (mTimer!=null) {
+            mTimer.cancel();
+            mTimer=null;
+        }
     }
 
     private void play(String music_path) {
@@ -87,7 +91,7 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
 
 //                System.out.println("from snackbar");
                 if (mCurrentPosition > 0) {
-                    System.out.println(mCurrentPosition);
+//                    System.out.println(mCurrentPosition);
                     mMediaPlayer.seekTo(mCurrentPosition);
                     mMediaPlayer.start();
 
@@ -102,7 +106,7 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
     }
 
     private void updateProgress() {
-        System.out.println(mMediaPlayer.getDuration());
+//        System.out.println(mMediaPlayer.getDuration());
         if (mTimer!=null) {
             mTimer.cancel();
             mTimer=null;
@@ -111,19 +115,20 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if (mMediaPlayer!=null && mMediaPlayer.isPlaying()) {
-                    mCurrentPosition = mMediaPlayer.getCurrentPosition();
+                if (mMediaPlayer!=null) {
+                    if (mMediaPlayer.isPlaying()) {
+                        mCurrentPosition = mMediaPlayer.getCurrentPosition();
 //                    System.out.println(mCurrentPosition);
-                    Message msg = Message.obtain();
-                    msg.what = GloableConstants.MUSIC_PROGRESS_UPDATE;
-                    msg.arg1 = mCurrentPosition;
-                    try {
-                        mMessenger.send(msg);
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+                        Message msg = Message.obtain();
+                        msg.what = GloableConstants.MUSIC_PROGRESS_UPDATE;
+                        msg.arg1 = mCurrentPosition;
+                        try {
+                            mMessenger.send(msg);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-
             }
         };
         mTimer.schedule(task, 100, 100);

@@ -92,7 +92,9 @@ public class LocalFragmentMusicBySong extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mSnackBar.dismiss();
+        if (mSeekBar!=null) {
+            mSnackBar.dismiss();
+        }
     }
 
     @Override
